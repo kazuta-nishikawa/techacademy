@@ -1,0 +1,28 @@
+rails _5.2.5_ new microposts --database=mysql --skip-test --skip-active-storage
+
+$ git init
+
+$ git add .
+
+$ git commit -m 'init'
+
+$ git branch -M main
+
+データベースの作成
+config/database.yml 
+username: dbuser
+password: dbpass
+$ rails db:create
+
+ジェネレータの設定
+Rails.application.config.generators do |g|
+  g.stylesheets false
+  g.javascripts false
+  g.helper false
+  g.skip_routes true
+end
+
+ページネーション
+gem 'kaminari'
+$ bundle install
+$ rails g kaminari:views bootstrap4  --Bootstrap のデザインを kaminari のページネーションに適応--

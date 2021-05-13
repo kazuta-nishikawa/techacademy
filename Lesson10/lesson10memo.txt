@@ -1,0 +1,91 @@
+Lesson10 Ruby MySQL連携
+
+１．Sinatra + Pumaを使い、リクエストを返せるようにする。
+表示画面のxxx.erbとルーティングのapp.rbを作る
+これでＷEBサーバー起動の準備
+--------------------------
+require "sinatara"
+get'/'do
+    erb :index
+end
+
+post'/'do
+    erb :index
+end
+---------------------------
+
+２．ＷEBサーバー起動
+$ ruby app.rb -o $IP -p $PORT
+
+３．必要なデータベースとテーブルの作成
+i)サーバーが動いているか確認、
+$ sudo service mysql status
+
+停止していればスタート
+$ sudo service mysql start
+
+データベースへ接続
+$ sudo mysql -u root
+
+データベース作成
+mysql> CREATE DATABASE booklist;
+mysql> SHOW databases;
+
+creata_table_books.sql作成＆ファイルの読み込み
+
+CREATE TABLE booklist.books (
+  id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  book_title VARCHAR(100),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+mysql> source ~/environment/自分の環境のパス/create_table_booklist.sql
+
+テータベースを選択、記述、表示
+mysql> USE booklist;
+mysql> INSERT INTO books (book_title) VALUES("非エンジニアのためのプログラミング講座");
+mysql> INSERT INTO books (book_title) VALUES("プログラミングRuby");
+mysql> INSERT INTO books (book_title) VALUES("入門HTML5");
+mysql> SELECT * FROM books;
+
+
+４．Ruby Mysql連携
+連携してRubyプログラムの中でMySQLからデータを取得します。
+mysql2 という Gem を利用
+$ sudo apt install libmysqlclient-dev -y
+$ gem install mysql2
+app.rb にrequire 'mysql2' を追加
+
+client = Mysql2::Client.new(host: 'localhost', username: 'root', database: 'booklist', encoding: 'utf8')
+client = Mysql2::Client.new(...) は、MySQL のクライアントを Ruby プログラム上で作成し、Ruby と MySQL との通信を確保しています。
+確保した通信手段は、client という変数にインスタンスとして代入
+今まではMySQLサーバに接続するためにターミナルからsudo mysql -u rootとコマンドを実行していましたが、
+今回はRubyから接続するためコマンドを打つように Mysql2::Client.new(...) を実行しています。
+clientには接続情報が入っている
+
+@records = client.query( SQL文 ) によって、SQL は実行され、その結果を @records に代入
+これをerbの中で使って処理を書く
+
+
+受け取り側にもデータベースを使えるようにクライアントインスタンスを生成
+post '/' do
+  client = Mysql2::Client.new(host: 'localhost', username: 'dbuser', password: 'dbpass', database: 'booklist', encoding: 'utf8')
+
+  # 書籍タイトルの保存
+  book_title = params['book_title']
+  statement = client.prepare('INSERT INTO books (book_title) VALUES(?)')
+  statement.execute(book_title)
+
+  @records = client.query("SELECT * FROM books ORDER BY created_at DESC")
+
+  erb :booklist
+end
+
+.prepare　で ? の中にデータが入る準備ができる
+.execute の引数にデータを入れられる
+
+なぜ、直接 INSERT INTO books (book_title) VALUES(params['book_title']) で実行しないのかというと、
+ユーザが送信したデータを直接 SQL 文に含めてしまうのは、 セキュリティ的にとても危険 だから
+
+ERB::Util.html_escape() メソッドはHTMLやJavaScriptをプログラムとして実行されず、
+ただの文字列として表示する無害化のためのメソッドです。

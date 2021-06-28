@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Weight:</strong>
+  <%= @body_datum.weight %>
+</p>
+
+<p>
+  <strong>Fat:</strong>
+  <%= @body_datum.fat %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @body_datum.date %>
+</p>
+
+<%= link_to 'Edit', edit_body_datum_path(@body_datum) %> |
+<%= link_to 'Back', body_data_path %>

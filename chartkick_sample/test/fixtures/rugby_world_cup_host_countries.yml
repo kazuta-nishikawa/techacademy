@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  total_attendance: 1
+  matches: 1
+  stadium_capacity: 1
+  held_at: 2021-06-14 10:25:12
+
+two:
+  name: MyString
+  total_attendance: 1
+  matches: 1
+  stadium_capacity: 1
+  held_at: 2021-06-14 10:25:12

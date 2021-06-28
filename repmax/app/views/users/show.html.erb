@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-sm-4 text-light">
+        <h1><%= @user.name %></h1>
+    </div>
+    <div class="col-sm-8 text-light">
+
+        <% if @user.birthday %>
+            <h2>Day of Birth:<%= @user.birthday %></h2>
+        <% end %>
+        
+        <% if @user.birthday %>
+            <h2>Age:<%= @age %></h2>
+        <% end %>
+        
+        <% if @user.height %>
+            <h2>Height: <%= @user.height %></h2>
+        <% end %>
+        
+            
+        <% if @user.description %>
+            <p class="word-break"><%= @user.description %> </p>
+        <% end %>
+
+    </div>
+<% if current_user == @user %>
+    <div>
+        <%= link_to "Add Record", new_record_path, class: 'btn btn-primary' %>
+        <%= link_to "Add Physical Data", new_physical_path, class: 'btn btn-primary' %>
+        <%= link_to "Show Physical Data", physical_path, class: 'btn btn-primary' %>
+        <%= link_to "csvで出力する",user_path(format: :csv), class:"btn btn-primary" %>
+    </div>
+<% end %>
+</div>
+
+<%= render 'records/repmax', records: @records, physical_data: @physical_data %> 

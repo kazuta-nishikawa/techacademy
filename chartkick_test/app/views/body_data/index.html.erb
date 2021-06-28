@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Body Data</h1>
+
+<%= line_chart BodyDatum.pluck(:date, :weight) %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Weight</th>
+      <th>Fat</th>
+      <th>Date</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @body_data.each do |body_datum| %>
+      <tr>
+        <td><%= body_datum.weight %></td>
+        <td><%= body_datum.fat %></td>
+        <td><%= body_datum.date %></td>
+        <td><%= link_to 'Show', body_datum %></td>
+        <td><%= link_to 'Edit', edit_body_datum_path(body_datum) %></td>
+        <td><%= link_to 'Destroy', body_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Body Datum', new_body_datum_path %>

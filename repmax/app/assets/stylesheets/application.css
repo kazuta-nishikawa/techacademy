@@ -13,3 +13,5 @@
  *= require_tree .
  *= require_self
  */
+     .jumbotron { background:url(gym2.jpg) center no-repeat; background-size: cover;}
+     
